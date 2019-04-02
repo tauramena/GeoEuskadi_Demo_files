@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!-- saved from /GeoEuskadiDemo/Mapa_Leaflet.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" class="gr__upv_s3_amazonaws_com"><!-- El texto entre <head> y </ head> proporciona información sobre el documento -->
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- ***** TITULO: Se requiere que la etiqueta <title> en todos los documentos HTML y define el título del documento ***** -->
+    <title>Visor Geográfico Tauramena</title>
+    <!-- ***** META TAGS: La etiqueta <meta> proporciona metadatos sobre el documento HTML. Los metadatos no se mostrará en la página, ***** -->
+    
+    <meta name="author" content="www.linkedin.com/in/williamapena">
+    <meta name="description" content="Mapa del municipio de Tauramena">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <!-- ***** ESTILOS ****** La etiqueta <link> define una relación entre un documento y un recurso externo-->
+    <!-- Favicon -->
+    <link rel="icon" href="./GeoEuskadi_Demo_files/logo-tauramena.png">
+    <!-- <link rel="icon" href="http://upv.s3.amazonaws.com/GeoEuskadiDemo/favicon.ico"> -->
+    <!-- Estilos DEMO  -->
+    <link href="./GeoEuskadi_Demo_files/estilos.css" rel="stylesheet">
+    <!-- Estilos jQuery -->
+    <link rel="stylesheet" href="./GeoEuskadi_Demo_files/jquery-ui.css">
+    <!-- Estilos Leaflet -->
+    <link rel="stylesheet" href="./GeoEuskadi_Demo_files/leaflet.css"> 
+    <!-- ***** JAVASCRIPT ***** La etiqueta <script> se utiliza para definir un script del lado del cliente, tales como JavaScript -->
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="./GeoEuskadi_Demo_files/jquery-ui.min.js"></script>
+
+    <link rel="stylesheet" href="./GeoEuskadi_Demo_files/L.Control.HtmlLegend.css">
+    <script src="./GeoEuskadi_Demo_files/L.Control.HtmlLegend.js"></script>
+
+
+
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+
+    <!-- control Mapa Leaflet -->
+    <script src="./GeoEuskadi_Demo_files/leaflet.js"></script>
+    <!-- Plugin Ajax para llamadas AJAX - detalles WMS -->
+    <script src="./GeoEuskadi_Demo_files/leaflet.ajax.min.js"></script>
+    <!-- Plugin Ajax para GeoJSON en Leaflet -->
+    <script src="./GeoEuskadi_Demo_files/leaflet-omnivore.min.js"></script>
+
+    <script type="text/javascript" src="./GeoEuskadi_Demo_files/veredas.js"></script>
+    <script type="text/javascript" src="./GeoEuskadi_Demo_files/cambioshum.js"></script>
+    <script type="text/javascript" src="./GeoEuskadi_Demo_files/humedales.js"></script>
+    <script type="text/javascript" src="./GeoEuskadi_Demo_files/areasinclusion.js"></script>
+    <script type="text/javascript" src="./GeoEuskadi_Demo_files/buenaspracticas.js"></script>
+    <script type="text/javascript" src="./GeoEuskadi_Demo_files/cobertura25k.js"></script>
+    <script type="text/javascript" src="./GeoEuskadi_Demo_files/confliusosuelo.js"></script>
+    <script type="text/javascript" src="./GeoEuskadi_Demo_files/invhumiavh.js"></script>
+    <script type="text/javascript" src="./GeoEuskadi_Demo_files/microcuencas.js"></script>
+    <script type="text/javascript" src="./GeoEuskadi_Demo_files/pozos.js"></script>
+    <script type="text/javascript" src="./GeoEuskadi_Demo_files/runap.js"></script>
+    <script type="text/javascript" src="./GeoEuskadi_Demo_files/sueprotec.js"></script>
+    <script type="text/javascript" src="./GeoEuskadi_Demo_files/zonprio.js"></script>
+    <script type="text/javascript" src="./GeoEuskadi_Demo_files/zonrecu.js"></script>
+    <!-- Código javascript para el mapa -->
+    <script src="./GeoEuskadi_Demo_files/mapa_leaflet.js"></script>
+    <!-- Listado Capas -->
+    <script src="./GeoEuskadi_Demo_files/capas.js"></script> 
+    
+</head>
+<!-- El texto entre <body> y </ body> describe el contenido de la página visible -->
+<body data-gr-c-s-loaded="true" class="">
+    <!-- PANEL IZQUIERDO - El <section> etiqueta define secciones en un documento, como capítulos, encabezados, pies de página, o cualquier otras secciones del documento. -->
+    <section class="menuContent">
+        <!-- CABECERA - El <header> elemento representa un contenedor para el contenido introductorio o un conjunto de enlaces de navegación -->
+        <header class="headerContent">
+            <!--La etiqueta <a> define un hipervínculo, que se utiliza para vincular de una página a otra-->
+            <a href="http://www.tauramena-casanare.gov.co/Paginas/default.aspx" target="_blank">
+                <!-- La etiqueta <img> define una imagen en una página HTML -->
+                <img src="./GeoEuskadi_Demo_files/logo-tauramena.png">
+            </a>
+            <a href="http://www.tauramena-casanare.gov.co/Paginas/default.aspx" target="_blank">
+                <img class="floatRight" src="./GeoEuskadi_Demo_files/logo_tauramena_.png">
+            </a>
+            <!-- La etiqueta <p> define un párrafo -->
+            <p>
+                <a class="titulo" href="http://upv.s3.amazonaws.com/GeoEuskadiDemo/Index.html"></a> <h1>Visor geográfico del municipio de Tauramena, Casanare</h1>
+            </p>
+        </header>
+        <!-- CONTROLES -->
+        <section class="borderedBox">
+            <!-- Las etiquetas de <h1> a <h6> se utilizan para definir títulos HTML. -->
+            <h4>Capas de informacion</h4>
+            <div id="capasDiv"></div>
+            <!-- La etiqueta <span> se utiliza para agrupar elementos en una misma linea de un documento. -->
+            <!--<span class="menuLbl">Mi ubicación:</span><a class="imgBtn myLocBtn" href="#" onclick="geolocate()">
+                <img src="./GeoEuskadi_Demo_files/my_location.png">
+            </a>-->
+            <!-- <br /> inserta un solo salto de línea. -->
+            <br>
+            <br>
+            <!--<span class="menuLbl">Capas:</span>-->
+            <!--  <select> elemento se utiliza para crear una lista desplegable. -->
+            <!--<select id="capasDropDown" style="vertical-align: top;"></select>
+            <a class="imgBtn addLayerBtn" href="#" onclick="addLayer()">
+                <img src="./GeoEuskadi_Demo_files/add.png"></a> -->
+        </section>
+        <!-- LEYENDA -->
+        <!-- <section class="borderedBox">-->
+            <!-- <h4>Leyenda</h4>-->
+            <!-- La etiqueta <div> define una división o una sección en un documento HTML. -->
+            <!--<div id="legendsDiv">[Ninguna capa cargada]</div>-->
+        <!--</section>-->
+        <!-- PIE - El <footer> define un pie de página de un documento o sección.-->
+        <footer class="footerContent">
+            <a class="floatLeft" href="https://www.orinoquiabiodiversa.org/" target="_blank">
+                <img src="./GeoEuskadi_Demo_files/logo-fob.jpg"></a>
+            <p>© 2019 by <a href="https://twitter.com/OblizaCo" target="_blank">Obliza EU.</a></p>
+        </footer>
+    </section>
+    <!-- PANEL DERECHO / MAPA + DETALLES - <main> especifica el contenido principal de un documento.-->
+    <main class="mapContent">
+        <!-- Diferente a OL. No podemos cargar un mapa Leaflet sobre un <main> así que añadimos un <section>-->
+
+        <section id="map" style="height: 100%; position: relative;" class="leaflet-container leaflet-fade-anim" tabindex="0">
+            <div id="map" style="height: 100%"></div>
+
+             <script type='text/javascript' src="GeoEuskadi_Demo_files/mapa_leaflet.js"></script>
+
+
+
+
+            <div class="leaflet-map-pane"></div>
+            <div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="http://leafletjs.com/" title="A JS library for interactive maps">Leaflet</a> | Map data © <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors</div></div></section>
+        <section id="itemDetails" style="display: none;">
+        </section>
+    </main>
+
+
+</body>
+
+<span class="gr__tooltip"><span class="gr__tooltip-content"></span><i class="gr__tooltip-logo"></i><span class="gr__triangle"></span></span></html>
