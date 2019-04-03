@@ -97,17 +97,7 @@ summary {
     vertical-align: top;
 }
 
-.imgBtn {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    border-radius: 5px;
-    opacity: 0.6;
-}
 
-    .imgBtn:hover {
-        opacity: 1;
-    }
 
 .myLocBtn {
     background: url('../GeoEuskadiDemo/imgs/my_location.png') no-repeat;
@@ -130,14 +120,6 @@ summary {
     background: url('../GeoEuskadi_Demo_files/visible.png') no-repeat;
 }
 
-.infoLayerIcon {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border-radius: 5px;
-    opacity: 0.6;
-    background: url('../GeoEuskadiDemo/imgs/info.png') no-repeat;
-}
 
 .layerLegendDiv {
     border: 1px solid #F4F4F4;

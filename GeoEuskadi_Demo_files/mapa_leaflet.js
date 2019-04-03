@@ -16,18 +16,23 @@ var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
     attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
 }).addTo(map);
 
+var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+});
+
 var baseLayers = {
     "OSM": Layer,
     "Black And White": OpenStreetMap_BlackAndWhite,
-    "Topo": OpenTopoMap
+    "Topo": OpenTopoMap,
+    "Imagery": Esri_WorldImagery
 };
 
 function Stylevereda(feature) {
     return{
-        fillColor: "red",
-        color: "White",
-        weight: 0.7,
-        opacity: 0.6,
+        fillColor: "#01DF3A",
+        color: "black",
+        weight: 0.9,
+        fillOpacity: 0.0,
     }
 };
 
@@ -53,8 +58,8 @@ function Stylecambios(feature) {
     return{
         fillColor: getColor(feature.properties.CAMBIO_GRU),
         color: "White",
-        weight: 0.5,
-
+        weight: 0.0,
+        fillOpacity: 1,
     };
 };
 function popupcambios(feature, layer) { 
@@ -65,28 +70,317 @@ layer.bindPopup(feature.properties.CAMBIO_GRU);
 }
 
 /* Cambia el icono de los puntos*/
-function popuphumfob(feature, layer) { 
-if (feature.properties && feature.properties.Predio) 
+function Stylecambioshum(feature) {
+    return{
+        fillColor: "green",
+        color: "White",
+        weight: 0.0,
+        opacity: 0.1,
+        fillOpacity: 1,
+
+    };
+};
+
+/* Cambia el estilo y popup de las áreas de inclusión*/
+function Styleareinc(feature) {
+    return{
+        fillColor: "#01DF3A",
+        color: "black",
+        weight: 0.3,
+        fillOpacity: 1,
+
+    };
+};
+
+/* estilo de la capa buenas practicas*/
+
+function getColorbp(d) {
+return d == 'Aguas continentales' ? '#005CE6' : 
+d == 'Bosques' ? '#38A800' : 
+d == 'Cultivos permanentes' ? '#FFFF73' : 
+d == 'Cultivos transitorios' ? '#FFD37F' : 
+d == 'Pastos' ? '#55FF00' : 
+d == 'Zonas de extracción mineras y escombreras' ? '#CCCCCC' : 
+d == 'Zonas industriales o comerciales y redes de comunicación' ? '#E64C00' : 
+d == 'Zonas urbanizadas' ? '#4E4E4E' : 
+d == 'Áreas abiertas, sin o con poca vegetación' ? '#E6E600' : 
+d == 'Áreas agrícolas heterogéneas' ? '#73FFDF' : 
+d == 'Áreas con vegetación herbácea y/o arbustiva' ? '#00734C' : 
+d == 'Áreas húmedas continentales' ? '#73B2FF' : 
+'#FFEDA0'; 
+}
+
+function Stylecambiosbp(feature) {
+    return{
+        fillColor: getColorbp(feature.properties.Nivel_2_Na),
+        color: "black",
+        weight: 0.0,
+        fillOpacity: 1,
+    };
+};
+
+/* Estilo de la capa de coberturas 25k*/
+
+function getColor25k(d) {
+return d == '1.2.2. Red vial, ferroviaria y terrenos asociados' ? '#CCCCCC' : 
+d == '1.3.1. Zonas de extraccion minera' ? '#9C9C9C' : 
+d == '2.3.1. Pastos limpios' ? '#FFFF00' : 
+d == '2.3.2. Pastos arbolados' ? '#FFD37F' : 
+d == '2.3.3. Pastos enmalezados' ? '#FFEBAF' : 
+d == '2.4.2. Mosaico de pastos y cultivos' ? '#E9FFBE' : 
+d == '3.1.1.1.1. Bosque denso alto de tierra firme' ? '#70A800' : 
+d == '3.1.1.1.2. Bosque denso alto inundable' ? '#4CE600' : 
+d == '3.1.1.2.1. Bosque denso bajo de tierra firme' ? '#00734C' : 
+d == '3.1.2.2.1. Bosque abierto bajo de tierra firme' ? '#5C8944' : 
+d == '3.1.2.2.2. Bosque abierto bajo inundable' ? '#00734C' : 
+d == '3.1.4. Bosque de galeria y ripario' ? '#38A800' : 
+d == '3.2.1.1.1.1. Herbazal denso de tierra firme no arbolado' ? '#A87000' : 
+d == '3.2.1.1.2.1. Herbazal denso inundable no arbolado' ? '#70A800' : 
+d == '3.2.1.1.2.2. Herbazal denso inundable arbolado' ? '#737300' : 
+d == '3.2.2.1. Arbustal denso' ? '#D7C29E' : 
+d == '3.2.2.2. Arbustal abierto' ? '#CDF57A' : 
+d == '3.2.3. Vegetacion secundaria o en transicion' ? '#D1FF73' : 
+d == '3.3.1. Zonas arenosas naturales' ? '#FFFF70' : 
+d == '3.3.3. Tierras desnudas y degradadas' ? '#E6E600' : 
+d == '3.3.4. Zonas quemadas' ? '#734C00' : 
+d == '4.1.1. Zonas Pantanosas' ? '#00734C' : 
+d == '4.1.3. Vegetacion acuatica sobre cuerpos de agua' ? '#BEE8FF' : 
+d == '5.1.1. Rios (50 m)' ? '#00C5FF' : 
+d == '5.1.2. Lagunas, lagos y cienagas naturales' ? '#005CE6' : 
+'#FFEDA0'; 
+}
+
+function Stylecambios25k(feature) {
+    return{
+        fillColor: getColor25k(feature.properties.NIVEL4),
+        color: "black",
+        weight: 0.0,
+        fillOpacity: 1,
+    };
+};
+
+function popupcambios25k(feature, layer) { 
+if (feature.properties && feature.properties.NIVEL4) 
 { 
-layer.bindPopup("Ubicado en el predio " + feature.properties.Predio); 
+layer.bindPopup(feature.properties.NIVEL4); 
+} 
+}
+
+/*estilo de la capa conflictos de uso de suelo*/
+function getColorconuso(d) {
+return d == 'ADECUADO' ? '#55FF00' : 
+d == 'INADECUADO' ? '#FFAA00' : 
+d == 'MUY INADECUADO' ? '#FF0000' : 
+d == 'SUBUTILIZADO' ? '#FFFFBE' : 
+'#FFEDA0'; 
+}
+
+function Stylecambiosconuso(feature) {
+    return{
+        fillColor: getColorconuso(feature.properties.CONFLICT_2),
+        color: "black",
+        weight: 0.0,
+        fillOpacity: 1,
+    };
+};
+
+function popupcambiosconuso(feature, layer) { 
+if (feature.properties && feature.properties.CONFLICT_2) 
+{ 
+layer.bindPopup(feature.properties.CONFLICT_2); 
 } 
 }
 
 
+/* variables inlcuidas en el mapa - capas*/
+
 var Veredas = L.geoJson(veredas, {style: Stylevereda, onEachFeature: popupvereda}).addTo(map);
 var Cambios = L.geoJson(cambioshum, {style:Stylecambios, onEachFeature: popupcambios});
-var Humedales = L.geoJson(humedales, {onEachFeature:popuphumfob});
-var areasinclusion = L.geoJson(areasinclusion);
-var buenaspracticas = L.geoJson(buenaspracticas);
-var cobertura25k = L.geoJson(cobertura25k);
-var confliusosuelo = L.geoJson(confliusosuelo);
-var invhumiavh = L.geoJson(invhumiavh);
-var microcuencas = L.geoJson(microcuencas);
-var pozos = L.geoJson(pozos);
-var runap = L.geoJson(runap);
-var sueprotec = L.geoJson(sueprotec);
-var zonprio = L.geoJson(zonprio);
+
+var geojsonMarkerOptions = {
+            radius: 5,
+            fillColor: "rgb(255,0,0)",
+            color: "#fff",
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 1   
+        };
+
+var Humedales = L.geoJson(humedales, {
+    pointToLayer: function (feature, latlng) {
+        var popupOptions = {maxWidth: 200};
+        var popupContent = "This is some content";
+        return L.circleMarker(latlng, geojsonMarkerOptions).bindPopup("HUMEDAL " + feature.properties.Predio); 
+    }
+});
+
+var areasinclusion = L.geoJson(areasinclusion, {style: Styleareinc}).bindPopup("<h2>Área de inclusión.</h2>");
+var buenaspracticas = L.geoJson(buenaspracticas, {style: Stylecambiosbp});
+var cobertura25k = L.geoJson(cobertura25k, {style: Stylecambios25k, onEachFeature: popupcambios25k});
+var confliusosuelo = L.geoJson(confliusosuelo, {style: Stylecambiosconuso, onEachFeature: popupcambiosconuso});
+
+var geojsonMarkerOptionsiavh = {
+            radius: 5,
+            fillColor: "rgb(255,170,0)",
+            color: "#fff",
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 1   
+        };
+
+var invhumiavh = L.geoJson(invhumiavh,{
+    pointToLayer: function(feature, latlng){
+        var popupOptions = {maxWidth: 200};
+        var popupContent = "This is some content";
+        return L.circleMarker(latlng, geojsonMarkerOptionsiavh).bindPopup("Humedal " + feature.properties.NOMBRE_GEO);
+    }
+});
+
+
+/*--------------propiedades de la capa de microcuencas-----------------*/
+
+function popupmicrocuencas(feature, layer) { 
+if (feature.properties && feature.properties.MICRO_ZONA) 
+{ 
+layer.bindPopup("MICROCUENCA " + feature.properties.MICRO_ZONA); 
+} 
+}
+
+function Stylermicrocuencas(feature) {
+    return{
+        fillColor: '#97DBF2',
+        color: "#4065EB",
+        weight: 0.8,
+        fillOpacity: 0.5,
+    };
+};
+
+var microcuencas = L.geoJson(microcuencas, {style: Stylermicrocuencas, onEachFeature: popupmicrocuencas});
+
+
+
+/*--------propiedades de la capa de pozos*/
+
+
+
+var geojsonMarkerOptionspozos = {
+            radius: 5,
+            fillColor: "rgb(0,255,0)",
+            color: "#fff",
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 1   
+        };
+
+var pozos = L.geoJson(pozos, {
+    pointToLayer: function(feature, latlng){
+        var popupOptions = {maxWidth: 200};
+        var popupContent = "This is some content";
+        return L.circleMarker(latlng, geojsonMarkerOptionspozos).bindPopup("POZO " + feature.properties.WELL_NAME); 
+    }
+});
+
+
+/*-----------propiedades de la cpa runap---------------------*/
+function Stylerunap(feature) {
+    return{
+        fillColor: '#70A800',
+        color: "black",
+        weight: 0.0,
+        fillOpacity: 1,
+    };
+};
+
+function popuprunap(feature, layer) { 
+if (feature.properties && feature.properties.categoria && feature.properties.nombre) 
+{ 
+layer.bindPopup(feature.properties.categoria + ": " + feature.properties.nombre); 
+} 
+}
+
+var runap = L.geoJson(runap, {style: Stylerunap, onEachFeature: popuprunap});
+
+
+
+/*-------------- propiedades de la capa suelos de protección---------------------*/
+
+function getColorsueprotec(d) {
+return d == 'Agricola' ? '#D1FF73' : 
+d == 'Agropecuario' ? '#FFE1BE' : 
+d == 'Area Urbana' ? '#686868' : 
+d == 'Areas Susceptibles por Inundaciones' ? '#73B2FF' : 
+d == 'Areas Susceptibles por Remoción Alta' ? '#734C00' : 
+d == 'Areas de Producción Petrolera' ? '#FFAA00' : 
+d == 'Areas de Recarga de Acuiferos' ? '#004DA8' : 
+d == 'Bosques Galería y Matas del Monte' ? '#00C5FF' : 
+d == 'Corredor Suburbano' ? '#F5F57A' : 
+d == 'DMI Mata La Urama' ? '#A3FF73' : 
+d == 'Microcuencas abastecedoras de Acueductos' ? '#00FFC5' : 
+d == 'Reserva Forestal Protectora - Bosque Natural' ? '#267300' : 
+d == 'Rondas de Nacimientos y Quebradas' ? '#00A9E6' : 
+d == 'Sistemas Agroforestales' ? '#E6E600' : 
+d == 'Suelos Frágiles' ? '#FFFFBE' : 
+d == 'Zona Industrial' ? '#343434' : 
+d == 'Zona de Expansión Urbana' ? '#D7C29E' : 
+'#FFEDA0'; 
+}
+
+function Stylesueprotec(feature) {
+    return{
+        fillColor: getColorsueprotec(feature.properties.POTENCIAL),
+        color: "black",
+        weight: 0.0,
+        fillOpacity: 1,
+    };
+};
+
+function popupsueprotec(feature, layer) { 
+if (feature.properties && feature.properties.POTENCIAL) 
+{ 
+layer.bindPopup(feature.properties.POTENCIAL); 
+} 
+}
+var sueprotec = L.geoJson(sueprotec, {style: Stylesueprotec, onEachFeature:popupsueprotec});
+
+/*----------propiedades de la capa zonas de prioridad------------------------*/
+
+function getColorzonprio(d) {
+return d == 'Erosión Ligera' ? '#FFFF73' : 
+d == 'Erosión Moderada' ? '#FFAA00' : 
+d == 'Erosión Severa' ? '#FF0000' : 
+d == 'Sin Evidencia de Erosión' ? '#98E600' : 
+d == 'Sin Suelo con Afloramiento Rocoso' ? '#9C9C9C' : 
+d == 'Sin Suelo con Cuerpos de Agua' ? '#005CE6' : 
+'#FFEDA0'; 
+}
+
+function Stylezonprio(feature) {
+    return{
+        fillColor: getColorzonprio(feature.properties.ZONIFICACI),
+        color: "black",
+        weight: 0.0,
+        fillOpacity: 1,
+    };
+};
+
+function popupzonprio(feature, layer) { 
+if (feature.properties && feature.properties.ZONIFICACI) 
+{ 
+layer.bindPopup(feature.properties.ZONIFICACI); 
+} 
+}
+
+var zonprio = L.geoJson(zonprio, {style: Stylezonprio, onEachFeature: popupzonprio});
+
+
+
+/*----------propiedades de la capa zonas de recuperación-------------*/
+
 var zonrecu = L.geoJson(zonrecu);
+
+
+/*------------ agregando las capas al control de capas---------------*/
+
 
 var overlays = {
     "Vereda": Veredas,
@@ -109,6 +403,20 @@ var c = L.control.layers(baseLayers, overlays, {collapsed: false}).addTo(map);
 
 $('#capasDiv').append(c.onAdd(map));
 $('.leaflet-top.leaflet-right').hide() = true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*var legend = L.control({position: 'bottomright'});
 **legend.onAdd = map => {
